@@ -61,8 +61,8 @@ export default function ChatInterface() {
 
 
   return (
-    <div className="font-sans flex flex-col p-6 mx-auto max-w-4xl">
-      <div className="flex-grow p-4">
+    <div className="font-sans flex flex-col p-6 mx-auto max-w-4xl min-h-screen">
+      <div className="flex-grow overflow-y-auto h-[40rem] p-4">
         {messages.map((message, ix) => (
           <div key={ix} className={`mb-2 py-2 px-3 rounded-xl ${message.role === "user" ? "text-right self-end" : "text-left"} 
             ${message.role === "user" ? "bg-indigo-700 text-white" : "bg-gray-200 text-black"} transition-opacity duration-300 ease-in`}
