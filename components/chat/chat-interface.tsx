@@ -62,6 +62,10 @@ export default function ChatInterface() {
   const speakMessage = (text: string) => {
     if ('speechSynthesis' in window && !paused) {
       const synth = window.speechSynthesis;
+      if (utterance) {
+        // Stop current speech
+        synth.cancel();
+      }
       const newUtterance = new SpeechSynthesisUtterance(text);
       setUtterance(newUtterance);
       setSpeaking(true);
