@@ -10,11 +10,15 @@ type Message = {
   parts: string;
 }
 
-
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState("");
   const [chat, setChat] = useState<ChatSession>();
+  const [speaking, setSpeaking] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(
+    null
+  );
 
   useEffect(() => {
     const chat = model.startChat({
@@ -36,9 +40,37 @@ export default function ChatInterface() {
           ...prevMessages,
           { parts: filteredResponse, role: "model" },
         ]);
+        speakMessage(text);
       })();
     }
   }, [chat]);
+
+  const pauseSpeech = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.pause();
+      setPaused(true);
+    }
+  };
+
+  const resumeSpeech = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.resume();
+      setPaused(false);
+    }
+  };
+
+  const speakMessage = (text: string) => {
+    if ('speechSynthesis' in window && !paused) {
+      const synth = window.speechSynthesis;
+      const newUtterance = new SpeechSynthesisUtterance(text);
+      setUtterance(newUtterance);
+      setSpeaking(true);
+      newUtterance.addEventListener('end', () => setSpeaking(false));
+      synth.speak(newUtterance);
+    } else {
+      console.log('Speech synthesis not supported or paused');
+    }
+  };
 
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
@@ -54,9 +86,11 @@ export default function ChatInterface() {
       const result = await chat.sendMessage(userInput);
       const response = result.response;
       const text = response.text();
+      const filteredResponse = filterResponse(text)
 
-      const newMessage = { role: "model", parts: text};
+      const newMessage = { role: "model", parts: filteredResponse};
       setMessages((prevMessages) => [...prevMessages, newMessage]);
+      speakMessage(filteredResponse);
     }
   };
 
@@ -70,6 +104,16 @@ export default function ChatInterface() {
               style={{ transitionDelay: `${ix * 0.1}s` }}
             >
             <span className="text-sm">{message.parts}</span>
+            {message.role === 'model' && (
+              <div className="flex mt-1">
+                <button className="mr-2 text-blue-500" onClick={() => speakMessage(message.parts)} disabled={speaking || paused}>
+                  {speaking ? 'Speaking...' : 'Read out loud'}
+                </button>
+                <button className="text-blue-500" onClick={paused ? resumeSpeech : pauseSpeech}>
+                  {paused ? 'Resume' : 'Pause'}
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>
