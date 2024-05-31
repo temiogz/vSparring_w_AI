@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState, useRef } from "react";
 import { ChatSession } from "@google/generative-ai";
 import { model, PROMPT, SAFETY_CONFIG } from "~/Gemini/config";
 import { filterResponse } from "~/lib/utils";
@@ -19,6 +19,13 @@ export default function ChatInterface() {
   const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(
     null
   );
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   useEffect(() => {
     const chat = model.startChat({
@@ -120,6 +127,7 @@ export default function ChatInterface() {
             )}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       <form className="flex items-center p-4 w-full" onSubmit={(e) => sendMessage(e)}>
