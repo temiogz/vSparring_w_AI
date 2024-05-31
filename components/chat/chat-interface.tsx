@@ -2,7 +2,7 @@
 
 import React, { FormEvent, useEffect, useState } from "react";
 import { ChatSession } from "@google/generative-ai";
-import { model, PROMPT } from "~/Gemini/config";
+import { model, PROMPT, SAFETY_CONFIG } from "~/Gemini/config";
 
 type Message = {
   role: string;
@@ -17,7 +17,8 @@ export default function ChatInterface() {
 
   useEffect(() => {
     const chat = model.startChat({
-      generationConfig: { maxOutputTokens: 700 }
+      generationConfig: { maxOutputTokens: 700 },
+      safetySettings: SAFETY_CONFIG
     });
     setChat(chat);
   }, []);
