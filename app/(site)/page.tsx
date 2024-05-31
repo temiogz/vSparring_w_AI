@@ -1,6 +1,6 @@
 import Link from "next/link";
 import ChatInterface from "~/components/chat/chat-interface";
-import { APP_NAME, lpHeroButtonText, lpHeroText } from "~/lib/consts";
+import { LpConstants } from "~/lib/consts";
 
 export default function Home() {
   return (
@@ -9,17 +9,17 @@ export default function Home() {
         <div className="text-center">
           <h1 className="text-5xl font-extrabold mb-6 tracking-wide">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 font-serif">
-              {APP_NAME}
+              {LpConstants.appName}
             </span>
           </h1>
           <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-            {lpHeroText}
+            {LpConstants.landingHeroText}
           </p>
           <Link
             href="#roast-section"
             className="bg-blue-500 hover:bg-blue-600 text-sm text-white font-bold py-3 px-6 rounded-full cursor-pointer transition duration-300 inline-block"
           >
-            {lpHeroButtonText}
+            {LpConstants.landingHeroButtonText}
           </Link>
         </div>
       </section>

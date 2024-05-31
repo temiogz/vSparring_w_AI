@@ -1,5 +1,9 @@
-export const lpHeroButtonText = 'get roasted'
+export const X = ['<ctrl100> <ctrl31>']
 
-export const APP_NAME = 'RoastWgemini'
+export const LpConstants = {
+  appName: 'RoastWgemini',
+  landingHeroButtonText: 'Get Roasted',
+  landingHeroText: 'Roast Session With Google Gemini'
+} as const;
 
-export const lpHeroText = 'Roast Session With Google Gemini';
+const DISALLOWED_WORDS = new Set([])
