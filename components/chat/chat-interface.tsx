@@ -3,6 +3,7 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { ChatSession } from "@google/generative-ai";
 import { model, PROMPT, SAFETY_CONFIG } from "~/Gemini/config";
+import { filterResponse } from "~/lib/utils";
 
 type Message = {
   role: string;
@@ -29,11 +30,11 @@ export default function ChatInterface() {
         const result = await chat.sendMessage(PROMPT);
         const response = result.response;
         const text = response.text();
-        // console.log({text})
+        const filteredResponse = filterResponse(text)
 
         setMessages((prevMessages) => [
           ...prevMessages,
-          { parts: text, role: "model" },
+          { parts: filteredResponse, role: "model" },
         ]);
       })();
     }
